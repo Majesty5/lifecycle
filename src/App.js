@@ -1,26 +1,54 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, {Component} from 'react'; //Object deconstructing
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+class Lifecycle extends Component {
+  constructor () {
+    super();
+    this.state = {
+      items: [],
+      isLoaded: false,
+    };
+  };
+//Initial Mount below
+componentDidMount () {
+  fetch ("https://jsonplaceholder.typicode.com/users")
+  .then(response => {
+    return response.json();
+  })
+  .then (data => {
+    console.log (data);
+    this.setState ({
+      isLoaded: true,
+      items: data,
+    });
+  });
+};
+//el means element
+
+  render() {
+    var {isLoaded, items} = this.state;
+    if(!isLoaded){
+      return (
+        <div>Loading....</div>
+      )
+    } else {
+    return(
+      <div className="App">
+      <div className="Names">
+      <ul>
+      {items.map(el => {
+        return (
+          <li key={el.id}>
+          Name: {el.name} | UserName: {el.username} |{" "}
+          <a href={`https://${el.website}`}>Website</a>
+          </li>
+        );
+      })}
+        </ul>
+      </div>
     </div>
-  );
-}
+      );
+    }
+  };
+};
 
-export default App;
+export default Lifecycle;
